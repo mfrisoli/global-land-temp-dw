@@ -76,7 +76,6 @@ staging_insert = """
     IGNOREHEADER 1
     ;
 """
-# Insert Data to tables
 
 time_insert_table = """
     INSERT INTO time (
@@ -135,7 +134,6 @@ readings_by_city_insert_table = """
 """
 
 
-
 sql_create_tables = [cities_create_table,
                      time_create_table,
                      readings_by_city_create_table,
@@ -147,3 +145,9 @@ sql_drop_tables = [cities_table_drop,
                    readings_by_city_table_drop, 
                    staging_events_table_drop
                    ]
+
+sql_insert_tables = [cities_insert_table, 
+                     time_insert_table, 
+                     readings_by_city_insert_table
+                    ]
+                    
