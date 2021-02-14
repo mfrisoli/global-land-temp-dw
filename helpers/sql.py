@@ -12,8 +12,8 @@ staging_events_create_table = """
     CREATE TABLE IF NOT EXISTS staging_events (
         index NUMERIC,
         dt DATE NOT NULL,
-        AverageTemperature NUMERIC,
-        AverageTemperatureUncertainty NUMERIC,
+        AverageTemperature NUMERIC(7,3),
+        AverageTemperatureUncertainty NUMERIC(7,3),
         City TEXT,
         Country TEXT,
         Latitude TEXT,
@@ -25,10 +25,10 @@ staging_events_create_table = """
 readings_by_city_create_table = """
     CREATE TABLE IF NOT EXISTS readings_by_city (
         by_city_id BIGINT IDENTITY(0,1),
-        date NUMERIC,
+        date DATE,
         city_id NUMERIC,
-        avg_temp NUMERIC,
-        avg_temp_uncertainty NUMERIC,
+        avg_temp NUMERIC(7,3),
+        avg_temp_uncertainty NUMERIC(7,3),
         major_city BOOLEAN
     );
 """
@@ -121,11 +121,13 @@ readings_by_city_insert_table = """
         city_id,
         avg_temp,
         avg_temp_uncertainty,
+        major_city
     )
     SELECT DISTINCT se.dt AS date,
         c.city_id,
         se.AverageTemperature,
-        se.AverageTemperatureUncertainty
+        se.AverageTemperatureUncertainty,
+        c.major_city
     FROM staging_events se
     JOIN cities c 
         ON se.city=c.city
@@ -150,4 +152,3 @@ sql_insert_tables = [cities_insert_table,
                      time_insert_table, 
                      readings_by_city_insert_table
                     ]
-                    
