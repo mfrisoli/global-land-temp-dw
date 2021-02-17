@@ -12,10 +12,25 @@ The ETL Pipeline works as described below:
 - Data is imported to AWS Redshift
 - Data quality tests are carried out to make sure the data exists and is available 
 
+## The Data:
+
+The source of the data used for this project comes from Kaggle [Climate Change: Earth Surface Temperature Data Set](https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data).
+
+"Some say climate change is the biggest threat of our age while others say it’s a myth based on dodgy science. We are turning some of the data over to you so you can form your own view."
+
+Date: starts in 1750 for average land temperature and 1850 for max and min land temperatures and global ocean and land temperatures
+
+Files Included:
+- Global Land Temperatures By Major City (GlobalLandTemperaturesByMajorCity.csv)
+- Global Land Temperatures By City (GlobalLandTemperaturesByCity.csv)
+
+
+The raw data comes from the [Berkeley Earth data page](http://berkeleyearth.org/data/).
+
 ## Files
 
- - `helpers`: Directory with multiple functions modularized in python scripts.
- - `data`: Directory where the dataset is stored before uploading to s3.
+ - `/helpers`: Directory with multiple functions modularized in python scripts.
+ - `/data`: Directory where the dataset is stored before uploading to s3.
  - `DW.cfg`: Configuration file that has all the main parameters required to create an AWS Redshift cluster using Infrastructure as code (IaC) methodology.
  - `awsUser.cfg`: Configuration with user ID and secret key. File not included in the repository.
  - `Project ETL Notebook.ipynb`: Notebook with ETL pipeline code.
@@ -72,7 +87,7 @@ For this project, a Star Schema was selected because of it simple style and its 
 
 ### Data Dictionary
 
-Below you will find a summary and example of the schema and data
+Below you will find a summary and example of the schema and data type constraints used
 
 ![Data Dictionary](media/data_dict.JPG 'Data Dictionary')
 
@@ -110,7 +125,7 @@ SECRET=<USER SECRET KEY>
 
 Follow the instruction from `create-redshift-cluster.ipynb` to create the cluster. 
 
-The cluster will be created with the following settings:
+The cluster will be created with the following settings from `DW.cfg`:
 
 - db_name = landtempdb
 - db_user = dwhuser
@@ -123,6 +138,12 @@ The cluster will be created with the following settings:
 - dwh_iam_role_name = dwhRole
 - dwh_cluster_identifier = dwhCluster
 - dwh_db = dwh
+
+To this settings you only need to include your s3 bucket name.
+```
+[S3]
+log_data = <s3 bucket name>
+```
 
 Inside the notebook `create-redshift-cluster.ipynb` once you run `prettyRedshiftProps()` and the cluster is available, run the next two blocks to get the cluster Endpoint and role ARN, these will be saved into the `DW.cfg` file. also open the connection to the cluster.
 
@@ -224,5 +245,10 @@ The data is checked using `data_quality_check()` function from `helpers/data_qua
 This will check that data exists and is available.
 
 if you get a success message you have succesfully implemented the ETL pipeline and now the Data Warehouse can be used.
+
+
+Here is an example of AWS Redshift DW once the pipeline has been implemented
+![Example of AWS Redshift DW](media/example_1.JPG 'Example of AWS Redshift DW')
+
 
 ## **DISCLAIMER: MAKE SURE THAT ONCE YOU ARE FINISHED USING DW, THE CLUSTER IS DELETED TO AVOID GETTING ADDITIONAL COSTS IN AWS**
